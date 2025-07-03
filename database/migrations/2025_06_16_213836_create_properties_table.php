@@ -20,7 +20,7 @@ return new class extends Migration
         $table->string('currency')->default('SYP');
         $table->string('location');
         $table->enum('type', ['for_sale', 'for_rent']); // للبيع أو للإيجار
-        $table->string('status')->default('pending'); // حالة العقار: قيد الانتظار، موافق عليه
+        $table->enum('status', ['pending', 'approved', 'rejected', 'sold', 'rented'])->default('pending');
         $table->string('latitude')->nullable();
         $table->string('longitude')->nullable();
         $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null'); // من أضاف العقار (يمكن أن يكون مسؤول)

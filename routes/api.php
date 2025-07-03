@@ -6,8 +6,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PropertyController;
 use App\Http\Controllers\Api\FavoriteController;
-use App\Http\Controllers\Admin\AdminCategoryController; // سننشئ هذا لاحقاً
-use App\Http\Controllers\Admin\AdminPropertyController; // سننشئ هذا لاحقاً
+use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminPropertyController;
 use App\Http\Controllers\Api\RatingController;
 /*
 |--------------------------------------------------------------------------

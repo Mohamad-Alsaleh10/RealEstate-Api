@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AdminRatingController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminPropertyController;
 
@@ -38,6 +40,11 @@ Route::middleware(['auth', 'verified', 'can:manage-admin-resources'])->prefix('a
     Route::resource('properties', AdminPropertyController::class); // CRUD Properties
     Route::post('properties/{property}/images', [AdminPropertyController::class, 'addImages'])->name('properties.add_images');
     Route::delete('property-images/{propertyImage}', [AdminPropertyController::class, 'deleteImage'])->name('properties.delete_image');
+    Route::resource('users', AdminUserController::class); 
+    Route::resource('ratings', AdminRatingController::class)->except(['create', 'store']); 
+    Route::post('properties/{property}/approve', [AdminPropertyController::class, 'approve'])->name('properties.approve');
+    Route::post('properties/{property}/reject', [AdminPropertyController::class, 'reject'])->name('properties.reject');
+
 });
 
 

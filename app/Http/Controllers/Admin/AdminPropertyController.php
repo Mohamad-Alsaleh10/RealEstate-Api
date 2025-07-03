@@ -18,10 +18,35 @@ class AdminPropertyController extends Controller
         $this->middleware('can:manage-admin-resources');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $properties = Property::with('category', 'images')->get();
-        return view('admin.properties.index', compact('properties'));
+        $query = Property::with('category', 'images', 'user'); // Eager load user who added it
+
+        // Filtering
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        if ($request->filled('search')) {
+            $query->where(function($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('location', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            })->orWhereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+
+        $properties = $query->latest()->paginate(10); // Paginate results
+        $categories = Category::all(); // For filter dropdown
+
+        return view('admin.properties.index', compact('properties', 'categories'));
     }
 
     public function create()
@@ -177,5 +202,17 @@ class AdminPropertyController extends Controller
         }
         $propertyImage->delete();
         return back()->with('success', 'Image deleted successfully.');
+    }
+
+
+        public function approve(Property $property)
+    {
+        $property->update(['status' => 'approved']);
+        return back()->with('success', 'Property approved successfully.');
+    }
+    public function reject(Property $property)
+    {
+        $property->update(['status' => 'rejected']); // Consider adding 'rejected' to your enum in migration
+        return back()->with('success', 'Property rejected.');
     }
 }
