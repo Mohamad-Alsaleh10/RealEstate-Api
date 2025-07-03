@@ -13,6 +13,8 @@ public function index(Request $request)
 {
     $query = Property::query()->with(['category', 'images', 'user']);
 
+
+
     // الفلترة حسب النوع (للبيع/للإيجار)
     if ($request->has('type')) {
         $query->where('type', $request->input('type'));
